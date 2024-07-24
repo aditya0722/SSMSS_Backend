@@ -1,6 +1,6 @@
 const express=require("express")
 const router=express.Router();
-const {forgotPassword,login,updatePassword,members} =require("../Controllers/login")
+const {forgotPassword,login,updatePassword,members} =require("../controllers/login")
 
 
 router.route("/").post(login)
