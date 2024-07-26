@@ -118,8 +118,31 @@ const BalanceSchema=mongoose.Schema({
     default: getCurrentISTDate, 
   },
 })
+const BlogSchema=mongoose.Schema({
+  imageUrl:{
+    type:String,
+    rwquired:true
+  },
+  title:{
+    type:String,
+    required:true
+  },
+  description:{
+    type:String,
+    required:true
+  },
+  date:{
+    type:Date,
+    required:true
+  },
+  location:{
+    type:String,
+    required:true
+  }
+})
 const Members = mongoose.model("Members", MembersSchema);
 const Items = mongoose.model("Store", StoreSchema);
 const Transaction = mongoose.model("Transaction", TransactionSchema);
 const Balance=mongoose.model("Balance",BalanceSchema);
-module.exports = {Members,Items,Transaction,Balance};
+const Blog =mongoose.model("Blog",BlogSchema)
+module.exports = {Members,Items,Transaction,Balance,Blog};
