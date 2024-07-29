@@ -1,4 +1,4 @@
-const {Items,Members} = require('../mongo');
+const {Items,Members,Balance,Blog, Transaction} = require('../mongo');
 const cloudinary = require('../cloudinaryConfig');
 const path = require('path');
 const fs = require('fs');
@@ -6,15 +6,14 @@ const fs = require('fs');
 // Adjust the function to use the file from `req.file`
 const registerMember = async (req, res) => {
   try {
-    const { name, address, dob, contact, email, joiningDate, role, userType } = req.body;
+    const { name, address, dob, contact, email, joiningDate, role, userType,password } = req.body;
     const imageFile = req.file;
     const foundContact= await Members.findOne({"contact":contact})
+    console.log("password",password)
     console.log(foundContact)
     if(foundContact){
       return res.status(500).json({data:"Member Already Exits"})
     }
-    // Generate a random password
-    const password = Math.random().toString(36).slice(-8);
 
     let imageUrl = null;
 
@@ -109,4 +108,30 @@ const deleteUser = async (req, res) => {
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 };
-module.exports = {registerMember,updateMember,deleteUser};
+const DashboardContant=async(req,res)=>{
+  try {
+    let data = {
+      users: 0,
+      blogs: 0,
+      balance: 0
+    };
+  
+    // Count the number of users
+    data.users = await Members.countDocuments();
+  
+    // Get the most recent balance entry
+    const latestBalance = await Transaction.findOne({}).sort({ _id: -1 });
+    data.balance = latestBalance ? latestBalance.balance : 0;
+  
+    // Count the number of blogs
+    data.blogs = await Blog.countDocuments();
+  
+    res.status(200).json({ data });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+
+  
+}
+module.exports = {registerMember,updateMember,deleteUser,DashboardContant};

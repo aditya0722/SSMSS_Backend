@@ -61,7 +61,7 @@ const UpdateItem = async (req, res) => {
 };
 const displayItems=async(req,res)=>{
     try{
-        const items= await Items.find();
+        const items= await Items.find().sort({ _id: -1 });
         res.status(200).json(items)
     }catch(error){
         res.status(500).json({data:"Error Occured"})

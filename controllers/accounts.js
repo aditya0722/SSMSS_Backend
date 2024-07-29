@@ -1,5 +1,5 @@
-const {Members,Items,Transaction,Balance} =require("../mongo")
-
+const {Members,Items,Transaction} =require("../mongo")
+const mongoose = require('mongoose');
 const getAccountDetails = async (req, res) => {
     try {
         const transactions = await Transaction.find();
@@ -8,14 +8,13 @@ const getAccountDetails = async (req, res) => {
             let transactionWithMemberName = { ...transaction._doc }; // Create a shallow copy of the transaction object
 
             if (transaction.memberId) {
-                const member = await Members.findById(transaction.memberId);
+                const member = await Members.findById(transaction.memberId).sort({ _id: -1 });
                 transactionWithMemberName.name = member ? member.name : "Unknown";
             }
 
             return transactionWithMemberName;
         }));
 
-        console.log(transactionsWithMemberNames);
         return res.status(200).json({ data: transactionsWithMemberNames });
     } catch (error) {
         console.log(error);
@@ -24,47 +23,64 @@ const getAccountDetails = async (req, res) => {
 }
 
 
-const getBalance=async(req,res)=>{
-    try{
-        const data=await Balance.find();
-        return res.status(200).json({data:"success"});
 
-    }catch(e){
-        return res.status(500).json({data:"Error Occured"});
 
-    }
-}
+
+
+
 const addTransaction = async (req, res) => {
     try {
         const { description, ammount, category, date, memberId, type } = req.body;
 
-        let tran;
-        if (memberId) {
-            tran = new Transaction({
-                ammount,
-                type,
-                description,
-                date,
-                category,
-                memberId,
-            });
+        // Ensure ammount is a valid number
+        if (isNaN(ammount)) {
+            return res.status(400).json({ data: "Invalid amount" });
+        }
+        const lastBalanceRecord = await Transaction.findOne({}).sort({ _id: -1 }).limit(1);
+
+        let currentBalance = lastBalanceRecord ? lastBalanceRecord.balance : 0;
+        
+        // Update balance based on transaction type
+        if (type === 'Income') {
+            currentBalance += Number(ammount);
+        } else if (type === 'Expenditure') {
+            currentBalance += Number(ammount); // Subtract for expenditure
         } else {
-            tran = new Transaction({
-                ammount,
-                type,
-                description,
-                date,
-                category,
-            });
+            return res.status(400).json({ data: "Invalid transaction type" });
+        }
+        let balance=currentBalance;
+        // Create a new transaction object
+        const transactionData = {
+            ammount: Number(ammount),
+            type,
+            description,
+            date: date || new Date(),
+            category,
+            balance
+        };
+
+        // If memberId is a valid ObjectId, include it
+        if (mongoose.Types.ObjectId.isValid(memberId)) {
+            transactionData.memberId = memberId;
         }
 
+        const tran = new Transaction(transactionData);
         await tran.save();
+
         return res.status(200).json({ data: "success" });
     } catch (e) {
         console.log(e);
         return res.status(500).json({ data: "Error Occurred" });
     }
 };
+
+
+
+
+
+
+
+
 const DeleteTransaction=async (req,res)=>{
     try{
     const {id}=req.params;
@@ -86,8 +102,9 @@ const UpdateTransaction=async(req,res)=>{
      
         const {id}=req.params;
         let {description, ammount, category, date, memberId, type }=req.body;
-        console.log(ammount)
         const transac= await Transaction.findById(id);
+
+        
         if(!transac){
             return res.status(400).json({msg:"Transaction Not Found"});        
         }
@@ -108,4 +125,4 @@ const UpdateTransaction=async(req,res)=>{
     }
 }
 
-module.exports={getAccountDetails,getBalance,addTransaction,DeleteTransaction,UpdateTransaction}
+module.exports={getAccountDetails,addTransaction,DeleteTransaction,UpdateTransaction}

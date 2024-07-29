@@ -32,7 +32,7 @@ const updatePassword = async (req, res) => {
 
 const members=async (req, res) => {
   try {
-    const data = await Members.find();
+    const data = await Members.find().sort({ _id: -1 });
     res.status(200).json(data);
   } catch (error) {
     res.status(500).json({ error: `${error}` });

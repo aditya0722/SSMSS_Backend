@@ -102,22 +102,17 @@ const TransactionSchema=mongoose.Schema({
     type:String,
     required:true
   },
+  balance:{
+    type:Number,
+    required:true
+  },
   memberId:{
     type:mongoose.Schema.Types.ObjectId,
     ref:"Members",
     required:false
   }
 })
-const BalanceSchema=mongoose.Schema({
-  balance:{
-    type:Number,
-    required:true
-  },
-  date: {
-    type: Date,
-    default: getCurrentISTDate, 
-  },
-})
+
 const BlogSchema=mongoose.Schema({
   imageUrl:{
     type:String,
@@ -142,7 +137,6 @@ const BlogSchema=mongoose.Schema({
 })
 const Members = mongoose.model("Members", MembersSchema);
 const Items = mongoose.model("Store", StoreSchema);
-const Transaction = mongoose.model("Transaction", TransactionSchema);
-const Balance=mongoose.model("Balance",BalanceSchema);
+const Transaction =mongoose.model("transaction",TransactionSchema)
 const Blog =mongoose.model("Blog",BlogSchema)
-module.exports = {Members,Items,Transaction,Balance,Blog};
+module.exports = {Members,Items,Transaction,Blog};

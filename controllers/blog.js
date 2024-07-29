@@ -52,7 +52,7 @@ const deleteBlog = async (req, res) => {
 }
 const blogs = async (req, res) => {
     try {
-        const data = await Blog.find();
+        const data = await Blog.find().sort({ _id: -1 });
         res.status(200).json(data);
     } catch (error) {
         res.status(500).json({ error: `${error}` });
@@ -97,8 +97,11 @@ const updateBlog = async (req, res) => {
         return res.status(200).json({ data: "Success" });
     } 
     catch (e) {
+       
         console.error(e);
-        return res.status(500).json({ data: "Internal Server Error" });
+        if (!res.headersSent) { // Ensure headers are not sent before sending a response
+            res.status(500).json({ message: "Internal server error" });
+        }
     }
 }
 
