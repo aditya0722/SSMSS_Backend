@@ -10,6 +10,7 @@ const cors =require("cors")
 const acountRoute=require("./routers/accountRouter")
 const blogRoute=require("./routers/blog")
 const bodyParser = require('body-parser');
+const receiptdata=require('./routers/receipt')
 // Middleware to parse JSON
 app.use(express.json());
 app.use(cors());
@@ -25,6 +26,8 @@ app.use("/api",register_route);
 app.use("/api",store_route);
 app.use("/api",acountRoute)
 app.use("/api",blogRoute)
+app.use("/api",receiptdata)
+
 
 
 app.listen(PORT, () => {

@@ -135,8 +135,27 @@ const BlogSchema=mongoose.Schema({
     required:true
   }
 })
+const receiptSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  address: { type: String, required: true },
+  contactNumber: { type: String, required: true },
+  items: [
+      {
+          name: { type: String, required: true },
+          price: { type: Number, required: true },
+          stock: { type: Number, required: true },
+          quantity: { type: String, required: true }, // If you prefer to store quantity as a string, otherwise change to Number
+          broken: { type: String, default: '' },
+          checked:{type:Boolean,default:false}
+      }
+  ],
+  status: { type: String, required: true },
+  totalAmount: { type: String, required: true } // If you prefer to store totalAmount as a number, change to Number
+});
+
+const Receipt = mongoose.model('Receipt', receiptSchema);
 const Members = mongoose.model("Members", MembersSchema);
 const Items = mongoose.model("Store", StoreSchema);
 const Transaction =mongoose.model("transaction",TransactionSchema)
 const Blog =mongoose.model("Blog",BlogSchema)
-module.exports = {Members,Items,Transaction,Blog};
+module.exports = {Members,Items,Transaction,Blog,Receipt};
