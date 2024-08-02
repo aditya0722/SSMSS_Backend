@@ -152,10 +152,83 @@ const receiptSchema = new mongoose.Schema({
   status: { type: String, required: true },
   totalAmount: { type: String, required: true } // If you prefer to store totalAmount as a number, change to Number
 });
+const attendanceSchema = new mongoose.Schema({
+  memberId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Member',
+    required: true
+  },
+  date: {
+    type: Date,
+    required: true
+  },
+  status: {
+    type: String,
+    enum: ['Present', 'Absent', 'Leave'],
+    required: true
+  },
+  fine: {
+    type: Number,
+    default: 0
+  },
+  finePaid: {
+    type: Boolean,
+    default: false
+  }
+});
 
+// Middleware to set fine amount based on attendance status
+attendanceSchema.pre('save', function(next) {
+  if (this.status === 'Absent') {
+    this.fine = 100;
+  } else {
+    this.fine = 0;
+  }
+  next();
+});
+const feesSchema = new mongoose.Schema({
+  memberId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Member',
+    required: true
+  },
+  date: {
+    type: Date,
+    required: true
+  },
+  status: {
+    type: String,
+    enum: ['Paid', 'Late Paid'],
+    required: true
+  },
+  amount: {
+    type: Number,
+    required: false
+  },
+  fine:{
+    type:Boolean,
+    default:0
+  }
+});
+
+// Middleware to set amount based on status
+feesSchema.pre('save', function(next) {
+  if (this.status === 'Paid') {
+    this.amount = 50;
+  } else if (this.status === 'Late Paid') {
+    this.amount = 150;
+    this.fine=true;
+  }
+  next();
+});
+
+
+
+const Fees = mongoose.model('Fees', feesSchema);
+const Attendance = mongoose.model('Attendance', attendanceSchema);
 const Receipt = mongoose.model('Receipt', receiptSchema);
 const Members = mongoose.model("Members", MembersSchema);
 const Items = mongoose.model("Store", StoreSchema);
 const Transaction =mongoose.model("transaction",TransactionSchema)
 const Blog =mongoose.model("Blog",BlogSchema)
-module.exports = {Members,Items,Transaction,Blog,Receipt};
+module.exports = {Members,Items,Transaction,Blog,Receipt,Attendance,Fees};
