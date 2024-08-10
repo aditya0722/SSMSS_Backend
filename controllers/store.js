@@ -3,7 +3,7 @@ const {Members,Items} =require("../mongo");
 const addItem = async (req, res) => {
     try {
       console.log(req.body)
-      const { itemName,price,stock } = req.body;
+      const { itemName,price,stock,rentPrice } = req.body;
       const foundContact= await Items.findOne({"itemName":itemName})
       console.log(foundContact)
       if(foundContact){
@@ -13,7 +13,8 @@ const addItem = async (req, res) => {
       const item = new Items({
         itemName,
         price,
-        stock
+        stock,
+        rentPrice
       });
   
       await item.save();
@@ -39,7 +40,7 @@ const DeleteItem=async(req,res)=>{
 const UpdateItem = async (req, res) => {
   try {
     const { id } = req.params;
-    const { itemName,price,stock } = req.body;
+    const { itemName,price,stock,rentPrice } = req.body;
     console.log(itemName,price,stock)
     const item =await Items.findById(id)
     // Update Item details
@@ -47,6 +48,7 @@ const UpdateItem = async (req, res) => {
     item.name = itemName || item.itemName;
     item.price = price || item.price;
     item.stock = stock || item.stock;
+    item.rentPrice = rentPrice || item.rentPrice;
     
 
     // Save the updated member

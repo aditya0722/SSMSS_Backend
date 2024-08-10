@@ -32,6 +32,10 @@ const StoreSchema = mongoose.Schema({
     type: Number,
     required: true
   },
+  rentPrice:{
+    type:Number,
+    default:0
+  },
   addedAt: {
     type: Date,
     default: getCurrentISTDate,
@@ -143,6 +147,7 @@ const receiptSchema = new mongoose.Schema({
       {
           name: { type: String, required: true },
           price: { type: Number, required: true },
+          rentPrice:{type:Number,default:0},
           stock: { type: Number, required: true },
           quantity: { type: String, required: true }, // If you prefer to store quantity as a string, otherwise change to Number
           broken: { type: String, default: '' },
