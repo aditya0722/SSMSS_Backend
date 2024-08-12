@@ -2,7 +2,7 @@ const {Members,Items,Transaction} =require("../mongo")
 const mongoose = require('mongoose');
 const getAccountDetails = async (req, res) => {
     try {
-        const transactions = await Transaction.find();
+        const transactions = await Transaction.find().sort({ _id: -1 });
 
         const transactionsWithMemberNames = await Promise.all(transactions.map(async (transaction) => {
             let transactionWithMemberName = { ...transaction._doc }; // Create a shallow copy of the transaction object
