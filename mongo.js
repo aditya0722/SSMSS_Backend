@@ -160,7 +160,7 @@ const receiptSchema = new mongoose.Schema({
 const attendanceSchema = new mongoose.Schema({
   memberId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Member',
+    ref: 'Members',
     required: true
   },
   date: {
@@ -194,7 +194,7 @@ attendanceSchema.pre('save', function(next) {
 const feesSchema = new mongoose.Schema({
   memberId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Member',
+    ref: 'member',
     required: true
   },
   date: {

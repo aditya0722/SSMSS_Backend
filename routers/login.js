@@ -5,6 +5,6 @@ const {forgotPassword,login,updatePassword,members} =require("../controllers/log
 
 router.route("/").post(login)
 router.route("/forgotPassword").post(forgotPassword);
-router.route("/updatePassword").post(updatePassword);
+router.route("/updatepassword").post(updatePassword);
 router.route("/members").get(members);
 module.exports=router;

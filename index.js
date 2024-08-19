@@ -12,6 +12,7 @@ const blogRoute=require("./routers/blog")
 const bodyParser = require('body-parser');
 const receiptdata=require('./routers/receipt');
 const AttandanceAndFee=require('./routers/AttendanceFee');
+const background =require("./routers/background")
 // Middleware to parse JSON
 app.use(express.json());
 app.use(cors());
@@ -29,6 +30,7 @@ app.use("/api",acountRoute);
 app.use("/api",blogRoute);
 app.use("/api",receiptdata);
 app.use("/api",AttandanceAndFee);
+app.use("/api",background)
 
 
 
