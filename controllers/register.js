@@ -3,10 +3,16 @@ const cloudinary = require('../cloudinaryConfig');
 const path = require('path');
 const fs = require('fs');
 
-// Adjust the function to use the file from `req.file`
+
 const registerMember = async (req, res) => {
   try {
-    const { name, address, dob, contact, email, joiningDate, role, userType,password } = req.body;
+    let { name, address, dob, contact, email, joiningDate, role, userType,password } = req.body;
+    console.log(req.body)
+    if(!email){
+      console.log(email)
+      email="Not Available";
+    }
+    console.log(email)
     const imageFile = req.file;
     const foundContact= await Members.findOne({"contact":contact})
     console.log("password",password)
@@ -49,6 +55,7 @@ const registerMember = async (req, res) => {
     return res.status(200).json("Registration Successful");
   } catch (error) {
     console.error("Error:", error);
+    console.log(error)
     return res.status(500).json({data:"Error occurred"});
   }
 };

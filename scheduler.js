@@ -27,7 +27,7 @@
 // const notifyAbsentMembers = async () => {
 //     try {
 //         // Fetch absent members
-//         const response = await axios.get('http://localhost:3000/api/absent-today');
+//         const response = await axios.get('https://ssmss-backend.onrender.com/api/absent-today');
 //         const absentees = response.data;
 
 //         // Loop through each absentee and send SMS

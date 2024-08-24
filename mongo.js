@@ -61,7 +61,7 @@ const MembersSchema = mongoose.Schema({
   },
   email: {
     type: String,
-    required: true
+    default:"Not Available"
   },
   joiningDate: {
     type: Date,
