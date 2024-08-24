@@ -4,12 +4,14 @@ const {Members,Items}=mongo;
 //login
 const login = async (req, res) => {
   const { contact, password } = req.body;
-  console.log(contact, password )
-    console.log(typeof(contact))
+  console.log("Contact:", contact, "Password:", password);
+
+    
   try {
-    const data = await Members.find({"contact":contact,"password":password});
-    console.log(data)
-    if (!data) {
+    const data = await Members.findOne({ contact: "1234567", password:"1234"});
+    console.log(data);
+    if (data) {
+      console.log("hi")
       return res.status(200).json({
         message: 'details Matched',
         data: data,
