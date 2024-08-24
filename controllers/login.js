@@ -8,7 +8,7 @@ const login = async (req, res) => {
 
     
   try {
-    const data = await Members.findOne({ contact: "1234567", password:"1234"});
+    const data = await Members.findOne({ contact: contact, password:password});
     console.log(data);
     if (data) {
       console.log("hi")
